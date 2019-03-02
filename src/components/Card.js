@@ -11,7 +11,7 @@ export default function Card(props) {
       <div className="card-body text-white">
         <h5 className="card-title">{heading}</h5>
         <p className="card-text">{text}</p>
-        <a href="../../public/index.html" className="btn btn-primary">
+        <a href="../../public/index.html" className="btn btn-warning">
           Go somewhere
         </a>
       </div>
