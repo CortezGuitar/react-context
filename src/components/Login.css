@@ -1,0 +1,17 @@
+@media screen and (min-width: 768px) {
+  .login {
+    width: 50%
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .login {
+    width: 40%
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .login {
+    width: 30%
+  }
+}

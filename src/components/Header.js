@@ -1,11 +1,30 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export default class Header extends Component {
   render() {
     return (
-      <div className="bg-success text-white p-3 display-1">
-        <h2 className="container">CONTEXT-BOOTSTRAP</h2>
-      </div>
+      <nav className="navbar navbar-expand-md bg-success navbar-dark shadow-sm">
+        <div className="container p-1">
+          <a href="http://localhost:3000" className="navbar-brand">
+            <h2>Context-Bootstrap</h2>
+          </a>
+          <div>
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <Link to="/" className="nav-link">
+                  <h4>Home</h4>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/login" className="nav-link">
+                  <h4>Login/Register</h4>
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
     );
   }
 }
