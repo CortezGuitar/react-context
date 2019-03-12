@@ -7,7 +7,12 @@ export default class Header extends Component {
       <nav className="navbar navbar-expand-md bg-success navbar-dark shadow-sm">
         <div className="container p-1">
           <a href="http://localhost:3000" className="navbar-brand">
-            <h2>Context-Bootstrap</h2>
+            <h2>
+              <span>
+                <i className="fab fa-react" />
+              </span>{' '}
+              Context-Bootstrap
+            </h2>
           </a>
           <div>
             <ul className="navbar-nav">
