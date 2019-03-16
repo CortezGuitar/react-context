@@ -8,7 +8,7 @@ export default class Header extends Component {
         <div className="container p-1">
           <a href="http://localhost:3000" className="navbar-brand">
             <h2>
-              <span>
+              <span className="text-warning">
                 <i className="fab fa-react" />
               </span>{' '}
               Context-Bootstrap

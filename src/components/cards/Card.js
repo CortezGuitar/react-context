@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Consumer } from '../../context';
+import axios from 'axios';
 
 export default class Card extends Component {
-  onDeleteClick = (id, dispatch) => {
+  onDeleteClick = async (id, dispatch) => {
+    await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`);
+
     dispatch({ type: 'DELETE_CARD', payload: id });
   };
 
@@ -14,7 +17,7 @@ export default class Card extends Component {
           const { dispatch } = value;
           return (
             <div
-              className="card m-3 border border-success"
+              className="card m-3 border border-warning"
               style={{ width: '20rem', backgroundColor: 'transparent' }}
             >
               <img className="card-img-top" src={image} alt="CardImage" />

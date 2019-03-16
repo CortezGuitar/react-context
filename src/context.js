@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 const Context = React.createContext();
 
@@ -59,10 +60,19 @@ export class Provider extends Component {
         text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, eligendi.`
       }
     ],
+    img:
+      'https://www.worldatlas.com/r/w728-h425-c728x425/upload/66/14/d8/kangchenjunga.jpg',
+
     dispatch: action => {
       this.setState(state => reducer(state, action));
     }
   };
+
+  async componentDidMount() {
+    const resp = await axios.get('https://jsonplaceholder.typicode.com/users');
+
+    this.setState({ cards: resp.data });
+  }
 
   render() {
     return (

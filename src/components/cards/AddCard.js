@@ -1,35 +1,60 @@
 import React, { Component } from 'react';
 import { Consumer } from '../../context';
+import axios from 'axios';
 
-import uuid from 'uuid';
+// import uuid from 'uuid';
 
 export default class AddCard extends Component {
   state = {
     imgUrl: '',
     heading: '',
-    text: ''
+    text: '',
+    errors: {}
   };
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
-  onSubmit = (dispatch, e) => {
+  onSubmit = async (dispatch, e) => {
     e.preventDefault();
 
     const { imgUrl, heading, text } = this.state;
 
+    if (imgUrl === '') {
+      this.setState({ errors: { imgUrl: 'Image URL is required' } });
+      return;
+    }
+
+    if (heading === '') {
+      this.setState({ errors: { heading: 'Heading is required' } });
+      return;
+    }
+
+    if (text === '') {
+      this.setState({ errors: { text: 'Description is required' } });
+      return;
+    }
+
     const newCard = {
-      imgUrl,
-      heading,
-      text,
-      id: uuid()
+      name: heading,
+      email: imgUrl,
+      text
+      // id: uuid()
     };
 
-    dispatch({ type: 'ADD_CARD', payload: newCard });
+    const resp = await axios.post(
+      `https://jsonplaceholder.typicode.com/users`,
+      newCard
+    );
+
+    dispatch({ type: 'ADD_CARD', payload: resp.data });
+
+    this.setState({ errors: {} });
+
     this.props.history.push('/');
   };
 
   render() {
-    const { imgUrl, heading, text } = this.state;
+    const { imgUrl, heading, text, errors } = this.state;
 
     return (
       <Consumer>
@@ -51,33 +76,45 @@ export default class AddCard extends Component {
                       <input
                         type="text"
                         name="imgUrl"
-                        className="form-control form-control-lg"
+                        className={
+                          'form-control form-control-lg ' +
+                          (errors.imgUrl ? 'is-invalid' : '')
+                        }
                         placeholder="Enter Image URL..."
                         value={imgUrl}
                         onChange={this.onChange}
                       />
+                      <div className="invalid-feedback">{errors.imgUrl}</div>
                     </div>
                     <div className="form-group">
-                      <label htmlFor="imgUrl">Heading</label>
+                      <label htmlFor="heading">Heading</label>
                       <input
                         type="text"
                         name="heading"
-                        className="form-control form-control-lg"
+                        className={
+                          'form-control form-control-lg ' +
+                          (errors.heading ? 'is-invalid' : '')
+                        }
                         placeholder="Enter Card Heading..."
                         value={heading}
                         onChange={this.onChange}
                       />
+                      <div className="invalid-feedback">{errors.heading}</div>
                     </div>
                     <div className="form-group">
-                      <label htmlFor="imgUrl">Description</label>
+                      <label htmlFor="text">Description</label>
                       <textarea
                         type="text"
                         name="text"
-                        className="form-control form-control-lg"
+                        className={
+                          'form-control form-control-lg ' +
+                          (errors.text ? 'is-invalid' : '')
+                        }
                         placeholder="Enter Card Description..."
                         value={text}
                         onChange={this.onChange}
                       />
+                      <div className="invalid-feedback">{errors.text}</div>
                     </div>
                     <div className="d-flex justify-content-around">
                       <input

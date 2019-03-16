@@ -22,10 +22,10 @@ class CardList extends Component {
                 <React.Fragment>
                   {cards.map(card => (
                     <Card
-                      key={card.id}
-                      image={card.imgUrl}
-                      heading={card.heading}
-                      text={card.text}
+                      key={card.id * (Math.random() * 100)}
+                      image={value.img}
+                      heading={card.name}
+                      text={card.email}
                       id={card.id}
                     />
                   ))}

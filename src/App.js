@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import background from './img/photo-1445358899385-5d4b6bbe0acb.jpg';
@@ -16,6 +11,7 @@ import Footer from './components/layout/Footer';
 import CardList from './components/cards/CardList';
 import Login from './components/login/Login';
 import AddCard from './components/cards/AddCard';
+import NotFound from './components/pages/NotFound';
 
 class App extends Component {
   render() {
@@ -50,7 +46,7 @@ class App extends Component {
                 <Route exact path="/" component={CardList} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/addcard" component={AddCard} />
-                <Redirect to="/" />
+                <Route component={NotFound} />
               </Switch>
             </div>
             <Footer />
