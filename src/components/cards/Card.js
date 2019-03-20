@@ -5,8 +5,8 @@ import { Consumer } from '../../context';
 import axios from '../../axios-orders';
 
 export default class Card extends Component {
-  onDeleteClick = async (id, dispatch) => {
-    await axios.delete(`/cards.json?${id}`);
+  onDeleteClick = async (id, dispatch, auth) => {
+    await axios.delete(`/cards/${id}.json?auth=${auth.token}`);
 
     dispatch({ type: 'DELETE_CARD', payload: id });
   };
@@ -16,7 +16,7 @@ export default class Card extends Component {
     return (
       <Consumer>
         {value => {
-          const { dispatch } = value;
+          const { dispatch, auth } = value;
           return (
             <div
               className="card m-3 border border-warning"
@@ -29,7 +29,7 @@ export default class Card extends Component {
                 <div className="d-flex">
                   <button
                     className="btn btn-warning w-75 mr-1"
-                    onClick={() => this.onDeleteClick(id, dispatch)}
+                    onClick={() => this.onDeleteClick(id, dispatch, auth)}
                   >
                     <span>
                       <i className="far fa-trash-alt" />

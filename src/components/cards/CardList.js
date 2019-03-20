@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import Card from './Card';
-import { Consumer, MyContext } from '../../context';
+import { Consumer } from '../../context';
 
 class CardList extends Component {
-  
   render() {
     return (
       <div>
@@ -44,7 +43,5 @@ class CardList extends Component {
     );
   }
 }
-
-CardList.contextType = MyContext;
 
 export default CardList;

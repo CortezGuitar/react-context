@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Consumer } from '../../context';
+import { Consumer, MyContext } from '../../context';
 import axios from '../../axios-orders';
-
 export default class EditCard extends Component {
   state = {
     imgUrl: '',
@@ -13,7 +12,9 @@ export default class EditCard extends Component {
   async componentDidMount() {
     const { id } = this.props.match.params;
 
-    const resp = await axios.get(`/cards.json?${id}`);
+    const resp = await axios.get(
+      `/cards.json?${id}&auth=${this.context.auth.token}`
+    );
 
     const card = resp.data[id];
 
@@ -26,7 +27,7 @@ export default class EditCard extends Component {
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
-  onSubmit = async (dispatch, e) => {
+  onSubmit = async (dispatch, auth, e) => {
     e.preventDefault();
 
     const { imgUrl, heading, text } = this.state;
@@ -54,9 +55,12 @@ export default class EditCard extends Component {
       text
     };
 
-    const resp = await axios.put(`/cards/${id}.json`, updCard);
-    
-    dispatch({ type: 'UPDATE_CARD', payload: { ...updCard, id } });
+    const resp = await axios.put(
+      `/cards/${id}.json?auth=${auth.token}`,
+      updCard
+    );
+
+    dispatch({ type: 'UPDATE_CARD', payload: { ...resp.data, id } });
 
     this.props.history.push('/');
   };
@@ -67,7 +71,7 @@ export default class EditCard extends Component {
     return (
       <Consumer>
         {value => {
-          const { dispatch } = value;
+          const { dispatch, auth } = value;
           return (
             <div className="container pt-5">
               <div
@@ -78,7 +82,7 @@ export default class EditCard extends Component {
                   <h3>Edit Card</h3>
                 </div>
                 <div className="card-body">
-                  <form onSubmit={e => this.onSubmit(dispatch, e)}>
+                  <form onSubmit={e => this.onSubmit(dispatch, auth, e)}>
                     <div className="form-group">
                       <label htmlFor="imgUrl">Image URL</label>
                       <input
@@ -147,3 +151,5 @@ export default class EditCard extends Component {
     );
   }
 }
+
+EditCard.contextType = MyContext;

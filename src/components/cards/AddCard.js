@@ -14,7 +14,7 @@ export default class AddCard extends Component {
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
-  onSubmit = async (dispatch, e) => {
+  onSubmit = async (dispatch, auth, e) => {
     e.preventDefault();
 
     const { imgUrl, heading, text } = this.state;
@@ -40,7 +40,7 @@ export default class AddCard extends Component {
       text
     };
 
-    const resp = await axios.post(`/cards.json`, newCard);
+    const resp = await axios.post(`/cards.json?auth=${auth.token}`, newCard);
 
     dispatch({ type: 'ADD_CARD', payload: { ...newCard, id: resp.data.name } });
 
@@ -55,7 +55,7 @@ export default class AddCard extends Component {
     return (
       <Consumer>
         {value => {
-          const { dispatch } = value;
+          const { dispatch, auth } = value;
           return (
             <div className="container pt-5">
               <div
@@ -66,7 +66,7 @@ export default class AddCard extends Component {
                   <h3>New Card</h3>
                 </div>
                 <div className="card-body">
-                  <form onSubmit={e => this.onSubmit(dispatch, e)}>
+                  <form onSubmit={e => this.onSubmit(dispatch, auth, e)}>
                     <div className="form-group">
                       <label htmlFor="imgUrl">Image URL</label>
                       <input

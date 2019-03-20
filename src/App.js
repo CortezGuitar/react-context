@@ -9,7 +9,7 @@ import { Provider } from './context';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import CardList from './components/cards/CardList';
-import Login from './components/login/Login';
+import Auth from './components/auth/Auth';
 import AddCard from './components/cards/AddCard';
 import EditCard from './components/cards/EditCard';
 import NotFound from './components/pages/NotFound';
@@ -45,7 +45,7 @@ class App extends Component {
             <div style={overlay}>
               <Switch>
                 <Route exact path="/" component={CardList} />
-                <Route exact path="/login" component={Login} />
+                <Route exact path="/auth" component={Auth} />
                 <Route exact path="/card/add" component={AddCard} />
                 <Route exact path="/card/edit/:id" component={EditCard} />
                 <Route component={NotFound} />

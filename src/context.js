@@ -22,6 +22,11 @@ const reducer = (state, action) => {
           card.id === action.payload.id ? (card = action.payload) : card
         )
       };
+    case 'AUTH_LOGIN':
+      return {
+        ...state,
+        auth: action.payload
+      };
     default:
       return state;
   }
@@ -30,13 +35,14 @@ const reducer = (state, action) => {
 export class Provider extends Component {
   state = {
     cards: [],
+    auth: { token: '', localId: '' },
     dispatch: action => {
       this.setState(state => reducer(state, action));
     }
   };
 
   async componentDidMount() {
-    const resp = await axios.get('/cards.json');
+    const resp = await axios.get(`/cards.json?auth=${this.state.auth.token}`);
     const fetchedOrders = [];
     for (let key in resp.data) {
       fetchedOrders.push({
@@ -46,6 +52,20 @@ export class Provider extends Component {
     }
 
     this.setState({ cards: fetchedOrders });
+  }
+
+  async componentDidUpdate(prevProps, prevState) {
+    if (this.state.auth.token !== prevState.auth.token) {
+      const resp = await axios.get(`/cards.json?auth=${this.state.auth.token}`);
+      const fetchedOrders = [];
+      for (let key in resp.data) {
+        fetchedOrders.push({
+          id: key,
+          ...resp.data[key]
+        });
+        this.setState({ cards: fetchedOrders });
+      }
+    }
   }
 
   render() {
