@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import Card from './Card';
-import { Consumer } from '../../context';
+import { Consumer, MyContext } from '../../context';
 
 class CardList extends Component {
+  
   render() {
     return (
       <div>
         <div className="container pt-3">
-          <Link to="/addcard" className="btn btn-primary btn-block w-50 m-auto">
+          <Link
+            to="/card/add"
+            className="btn btn-primary btn-block w-50 m-auto"
+          >
             <h4>New Card</h4>
           </Link>
         </div>
@@ -18,19 +22,21 @@ class CardList extends Component {
           <Consumer>
             {value => {
               const { cards } = value;
-              return (
-                <React.Fragment>
-                  {cards.map(card => (
-                    <Card
-                      key={card.id * (Math.random() * 100)}
-                      image={value.img}
-                      heading={card.name}
-                      text={card.email}
-                      id={card.id}
-                    />
-                  ))}
-                </React.Fragment>
-              );
+              if (cards) {
+                return (
+                  <React.Fragment>
+                    {cards.map(card => (
+                      <Card
+                        key={card.id}
+                        image={card.imgUrl}
+                        heading={card.heading}
+                        text={card.text}
+                        id={card.id}
+                      />
+                    ))}
+                  </React.Fragment>
+                );
+              }
             }}
           </Consumer>
         </div>
@@ -38,5 +44,7 @@ class CardList extends Component {
     );
   }
 }
+
+CardList.contextType = MyContext;
 
 export default CardList;

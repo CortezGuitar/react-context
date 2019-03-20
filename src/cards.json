@@ -1,0 +1,33 @@
+{
+  "cards": [{
+      "imgUrl": "https://source.unsplash.com/random/500x300",
+      "heading": "Lorem ipsum.",
+      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, eligendi."
+    },
+    {
+      "imgUrl": "https://source.unsplash.com/random/501x300",
+      "heading": "Lorem ipsum.",
+      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, eligendi."
+    },
+    {
+      "imgUrl": "https://source.unsplash.com/random/502x300",
+      "heading": "Lorem ipsum.",
+      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, eligendi."
+    },
+    {
+      "imgUrl": "https://source.unsplash.com/random/503x300",
+      "heading": "Lorem ipsum.",
+      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, eligendi."
+    },
+    {
+      "imgUrl": "https://source.unsplash.com/random/504x300",
+      "heading": "Lorem ipsum.",
+      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, eligendi."
+    },
+    {
+      "imgUrl": "https://source.unsplash.com/random/505x300",
+      "heading": "Lorem ipsum.",
+      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, eligendi."
+    }
+  ]
+}

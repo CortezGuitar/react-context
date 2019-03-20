@@ -1,16 +1,28 @@
 import React, { Component } from 'react';
 import { Consumer } from '../../context';
 import axios from '../../axios-orders';
-import { Redirect } from 'react-router-dom';
 
-export default class AddCard extends Component {
+export default class EditCard extends Component {
   state = {
     imgUrl: '',
     heading: '',
     text: '',
-    errors: {},
-    toDashboard: false
+    errors: {}
   };
+
+  async componentDidMount() {
+    const { id } = this.props.match.params;
+
+    const resp = await axios.get(`/cards.json?${id}`);
+
+    const card = resp.data[id];
+
+    this.setState({
+      heading: card.heading,
+      text: card.text,
+      imgUrl: card.imgUrl
+    });
+  }
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
@@ -34,24 +46,24 @@ export default class AddCard extends Component {
       return;
     }
 
-    const newCard = {
-      heading,
+    const { id } = this.props.match.params;
+
+    const updCard = {
       imgUrl,
+      heading,
       text
     };
 
-    const resp = await axios.post(`/cards.json`, newCard);
+    const resp = await axios.put(`/cards/${id}.json`, updCard);
+    
+    dispatch({ type: 'UPDATE_CARD', payload: { ...updCard, id } });
 
-    dispatch({ type: 'ADD_CARD', payload: { ...newCard, id: resp.data.name } });
-
-    this.setState({ errors: {}, toDashboard: true });
+    this.props.history.push('/');
   };
 
   render() {
     const { imgUrl, heading, text, errors } = this.state;
-    if (this.state.toDashboard) {
-      return <Redirect to="/" />;
-    }
+
     return (
       <Consumer>
         {value => {
@@ -63,7 +75,7 @@ export default class AddCard extends Component {
                 style={{ backgroundColor: 'transparent' }}
               >
                 <div className="card-header bg-success">
-                  <h3>New Card</h3>
+                  <h3>Edit Card</h3>
                 </div>
                 <div className="card-body">
                   <form onSubmit={e => this.onSubmit(dispatch, e)}>
@@ -115,7 +127,7 @@ export default class AddCard extends Component {
                     <div className="d-flex justify-content-around">
                       <input
                         type="submit"
-                        value="Add Card"
+                        value="Update Card"
                         className="btn btn-lg btn-success btn-block m-0 mr-1"
                       />
                       <input

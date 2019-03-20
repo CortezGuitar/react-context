@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import axios from './axios-orders';
 
 const Context = React.createContext();
 
@@ -15,6 +15,13 @@ const reducer = (state, action) => {
         ...state,
         cards: [action.payload, ...state.cards]
       };
+    case 'UPDATE_CARD':
+      return {
+        ...state,
+        cards: state.cards.map(card =>
+          card.id === action.payload.id ? (card = action.payload) : card
+        )
+      };
     default:
       return state;
   }
@@ -22,56 +29,23 @@ const reducer = (state, action) => {
 
 export class Provider extends Component {
   state = {
-    cards: [
-      {
-        id: 1,
-        imgUrl: `https://source.unsplash.com/random/500x300`,
-        heading: `Lorem ipsum.`,
-        text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, eligendi.`
-      },
-      {
-        id: 2,
-        imgUrl: `https://source.unsplash.com/random/501x300`,
-        heading: `Lorem ipsum.`,
-        text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, eligendi.`
-      },
-      {
-        id: 3,
-        imgUrl: `https://source.unsplash.com/random/502x300`,
-        heading: `Lorem ipsum.`,
-        text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, eligendi.`
-      },
-      {
-        id: 4,
-        imgUrl: `https://source.unsplash.com/random/503x300`,
-        heading: `Lorem ipsum.`,
-        text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, eligendi.`
-      },
-      {
-        id: 5,
-        imgUrl: `https://assets.nationbuilder.com/lifeandhope/pages/432/attachments/original/1489591854/River.jpg?1489591854`,
-        heading: `Lorem ipsum.`,
-        text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, eligendi.`
-      },
-      {
-        id: 6,
-        imgUrl: `https://www.marlborough.govt.nz/repository/libraries/id:1w1mps0ir17q9sgxanf9/hierarchy/Standard%20Images%20Reusable/Watercourse_river_stream_GCI.jpg`,
-        heading: `Lorem ipsum.`,
-        text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, eligendi.`
-      }
-    ],
-    img:
-      'https://www.worldatlas.com/r/w728-h425-c728x425/upload/66/14/d8/kangchenjunga.jpg',
-
+    cards: [],
     dispatch: action => {
       this.setState(state => reducer(state, action));
     }
   };
 
   async componentDidMount() {
-    const resp = await axios.get('https://jsonplaceholder.typicode.com/users');
+    const resp = await axios.get('/cards.json');
+    const fetchedOrders = [];
+    for (let key in resp.data) {
+      fetchedOrders.push({
+        id: key,
+        ...resp.data[key]
+      });
+    }
 
-    this.setState({ cards: resp.data });
+    this.setState({ cards: fetchedOrders });
   }
 
   render() {
@@ -82,5 +56,7 @@ export class Provider extends Component {
     );
   }
 }
+
+export const MyContext = Context;
 
 export const Consumer = Context.Consumer;

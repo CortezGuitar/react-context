@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
 import { Consumer } from '../../context';
-import axios from 'axios';
+import axios from '../../axios-orders';
 
 export default class Card extends Component {
   onDeleteClick = async (id, dispatch) => {
-    await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`);
+    await axios.delete(`/cards.json?${id}`);
 
     dispatch({ type: 'DELETE_CARD', payload: id });
   };
@@ -24,15 +26,23 @@ export default class Card extends Component {
               <div className="card-body text-white">
                 <h5 className="card-title">{heading}</h5>
                 <p className="card-text">{text}</p>
-                <button
-                  className="btn btn-warning btn-block"
-                  onClick={() => this.onDeleteClick(id, dispatch)}
-                >
-                  <span>
-                    <i className="far fa-trash-alt" />
-                  </span>{' '}
-                  Remove
-                </button>
+                <div className="d-flex">
+                  <button
+                    className="btn btn-warning w-75 mr-1"
+                    onClick={() => this.onDeleteClick(id, dispatch)}
+                  >
+                    <span>
+                      <i className="far fa-trash-alt" />
+                    </span>{' '}
+                    Remove
+                  </button>
+
+                  <Link to={`card/edit/${id}`} className="btn btn-success w-25">
+                    <span>
+                      <i className="fas fa-edit" />
+                    </span>
+                  </Link>
+                </div>
               </div>
             </div>
           );
