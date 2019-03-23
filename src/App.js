@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect
+} from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import background from './img/photo-1445358899385-5d4b6bbe0acb.jpg';
 
-import { Provider } from './context';
+import { MyContext } from './context';
 
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
@@ -14,7 +19,7 @@ import AddCard from './components/cards/AddCard';
 import EditCard from './components/cards/EditCard';
 import NotFound from './components/pages/NotFound';
 
-class App extends Component {
+export default class App extends Component {
   render() {
     const overlay = {
       position: 'relative',
@@ -28,35 +33,44 @@ class App extends Component {
       zIndex: '2',
       minHeight: `800px`
     };
+    let routes = (
+      <Switch>
+        <Route exact path="/" component={CardList} />
+        <Route exact path="/auth" component={Auth} />
+        <Route exact path="/card/add" component={AddCard} />
+        <Route exact path="/card/edit/:id" component={EditCard} />
+        <Route component={NotFound} />
+      </Switch>
+    );
+
+    if (!this.context.auth.token) {
+      routes = (
+        <Switch>
+          <Route exact path="/auth" component={Auth} />
+          <Redirect to="/auth" />
+          <Route component={NotFound} />
+        </Switch>
+      );
+    }
 
     return (
-      <Provider>
-        <Router>
-          <div
-            style={{
-              backgroundImage: `url(${background})`,
-              backgroundSize: `cover`,
-              minHeight: `800px`,
-              height: `100%`,
-              position: 'relative'
-            }}
-          >
-            <Header />
-            <div style={overlay}>
-              <Switch>
-                <Route exact path="/" component={CardList} />
-                <Route exact path="/auth" component={Auth} />
-                <Route exact path="/card/add" component={AddCard} />
-                <Route exact path="/card/edit/:id" component={EditCard} />
-                <Route component={NotFound} />
-              </Switch>
-            </div>
-            <Footer />
-          </div>
-        </Router>
-      </Provider>
+      <Router>
+        <div
+          style={{
+            backgroundImage: `url(${background})`,
+            backgroundSize: `cover`,
+            minHeight: `800px`,
+            height: `100%`,
+            position: 'relative'
+          }}
+        >
+          <Header />
+          <div style={overlay}>{routes}</div>
+          <Footer />
+        </div>
+      </Router>
     );
   }
 }
 
-export default App;
+App.contextType = MyContext;

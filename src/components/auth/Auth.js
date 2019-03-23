@@ -31,27 +31,25 @@ export default class Auth extends Component {
 
     const newUser = { email, password, returnSecureToken: true };
 
+    let url = '';
+
     if (isSignUp) {
-      const resp = await axios.post(
-        `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyBmtETju1J-7BEmrbZ5yAPrRiA-jEGiNcI`,
-        newUser
-      );
-
-      dispatch({
-        type: 'AUTH_LOGIN',
-        payload: { token: resp.data.idToken, localId: resp.data.localId }
-      });
+      url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyBmtETju1J-7BEmrbZ5yAPrRiA-jEGiNcI`;
     } else {
-      const resp = await axios.post(
-        `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyBmtETju1J-7BEmrbZ5yAPrRiA-jEGiNcI`,
-        newUser
-      );
-
-      dispatch({
-        type: 'AUTH_LOGIN',
-        payload: { token: resp.data.idToken, localId: resp.data.localId }
-      });
+      url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyBmtETju1J-7BEmrbZ5yAPrRiA-jEGiNcI`;
     }
+
+    const resp = await axios.post(url, newUser);
+    const expDate = new Date(new Date().getTime() + resp.data.expiresIn * 1000);
+
+    dispatch({
+      type: 'AUTH_LOGIN',
+      payload: { token: resp.data.idToken, localId: resp.data.localId }
+    });
+
+    localStorage.setItem('token', resp.data.idToken);
+    localStorage.setItem('expDate', expDate);
+    localStorage.setItem('userId', resp.data.localId);
 
     this.setState({ errors: {} });
 
@@ -72,8 +70,14 @@ export default class Auth extends Component {
           const { dispatch } = value;
           return (
             <div className="login container pt-5">
-              <div className="card">
-                <div className="card-header">
+              <div className="card border-0">
+                <div
+                  className={
+                    isSignUp
+                      ? 'card-header bg-warning'
+                      : 'card-header bg-primary text-white'
+                  }
+                >
                   <h3 className={isSignUp ? 'float-left' : 'float-right'}>
                     {isSignUp ? 'Sign Up' : 'Sign In'}
                   </h3>
@@ -118,7 +122,7 @@ export default class Auth extends Component {
                     />
                     <input
                       type="button"
-                      value="Switch to Sign In"
+                      value="Sign In/Up"
                       className="btn btn-lg btn-primary mb-2 ml-3"
                       onClick={this.onSwitchHandler}
                     />

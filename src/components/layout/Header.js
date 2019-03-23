@@ -1,7 +1,17 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Consumer, MyContext } from '../../context';
+import { withRouter } from 'react-router-dom';
 
-export default class Header extends Component {
+class Header extends Component {
+  onLogoutHandler = dispatch => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('expDate');
+    localStorage.removeItem('userId');
+    dispatch({ type: 'AUTH_LOGOUT', payload: { token: null, localId: null } });
+    this.props.history.push('/auth');
+  };
+
   render() {
     return (
       <nav className="navbar navbar-expand-md bg-success navbar-dark shadow-sm">
@@ -23,9 +33,27 @@ export default class Header extends Component {
               </li>
               <li className="nav-item">
                 <Link to="/auth" className="nav-link">
-                  <h4>Sign Up</h4>
+                  <h4>Sign Up/In</h4>
                 </Link>
               </li>
+              <Consumer>
+                {value => {
+                  const { dispatch } = value;
+                  return (
+                    <li
+                      className="nav-item"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => this.onLogoutHandler(dispatch)}
+                    >
+                      {this.context.auth.token !== null ? (
+                        <button className="btn btn-lg nav-link text-warning bg-success">
+                          <p className="h4">Logout</p>
+                        </button>
+                      ) : null}
+                    </li>
+                  );
+                }}
+              </Consumer>
             </ul>
           </div>
         </div>
@@ -33,3 +61,7 @@ export default class Header extends Component {
     );
   }
 }
+
+export default withRouter(Header);
+
+Header.contextType = MyContext;
