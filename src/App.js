@@ -20,6 +20,30 @@ import EditCard from './components/cards/EditCard';
 import NotFound from './components/pages/NotFound';
 
 export default class App extends Component {
+  componentDidMount() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.context.dispatch({
+        type: 'AUTH_LOGOUT',
+        payload: { token: null, localId: null }
+      });
+    } else {
+      const expDate = new Date(localStorage.getItem('expDate'));
+      if (expDate < new Date()) {
+        this.context.dispatch({
+          type: 'AUTH_LOGOUT',
+          payload: { token: null, localId: null }
+        });
+      } else {
+        const localId = localStorage.getItem('userId');
+        this.context.dispatch({
+          type: 'AUTH_LOGIN',
+          payload: { token: token, localId: localId }
+        });
+      }
+    }
+  }
+  
   render() {
     const overlay = {
       position: 'relative',
@@ -40,12 +64,14 @@ export default class App extends Component {
         <Route exact path="/card/add" component={AddCard} />
         <Route exact path="/card/edit/:id" component={EditCard} />
         <Route component={NotFound} />
+        <Redirect to="/" />
       </Switch>
     );
 
     if (!this.context.auth.token) {
       routes = (
         <Switch>
+          <Route exact path="/" component={CardList} />
           <Route exact path="/auth" component={Auth} />
           <Redirect to="/auth" />
           <Route component={NotFound} />

@@ -37,7 +37,8 @@ export default class AddCard extends Component {
     const newCard = {
       heading,
       imgUrl,
-      text
+      text,
+      userId: auth.localId
     };
 
     const resp = await axios.post(`/cards.json?auth=${auth.token}`, newCard);

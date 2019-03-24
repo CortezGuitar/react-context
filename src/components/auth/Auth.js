@@ -42,18 +42,18 @@ export default class Auth extends Component {
     const resp = await axios.post(url, newUser);
     const expDate = new Date(new Date().getTime() + resp.data.expiresIn * 1000);
 
+    localStorage.setItem('token', resp.data.idToken);
+    localStorage.setItem('expDate', expDate);
+    localStorage.setItem('userId', resp.data.localId);
+
     dispatch({
       type: 'AUTH_LOGIN',
       payload: { token: resp.data.idToken, localId: resp.data.localId }
     });
 
-    localStorage.setItem('token', resp.data.idToken);
-    localStorage.setItem('expDate', expDate);
-    localStorage.setItem('userId', resp.data.localId);
-
     this.setState({ errors: {} });
 
-    this.props.history.push('/');
+    window.location.replace('http://localhost:3000');
   };
 
   onSwitchHandler = () => {

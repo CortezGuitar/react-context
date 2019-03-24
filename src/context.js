@@ -58,7 +58,16 @@ export class Provider extends Component {
       auth.token = null;
     }
 
-    const resp = await axios.get(`/cards.json?auth=${auth.token}`);
+    const queryParams = `?auth=${auth.token}&orderBy="userId"&equalTo="${
+      auth.localId
+    }"`;
+
+    const resp = await axios.get(`/cards.json${queryParams}`);
+
+    this.refreshCards(resp, auth);
+  }
+
+  refreshCards = (resp, auth) => {
     const fetchedOrders = [];
     for (let key in resp.data) {
       fetchedOrders.push({
@@ -66,23 +75,8 @@ export class Provider extends Component {
         ...resp.data[key]
       });
     }
-
     this.setState({ auth, cards: fetchedOrders });
-  }
-
-  async componentDidUpdate(prevProps, prevState) {
-    if (this.state.auth.token !== prevState.auth.token) {
-      const resp = await axios.get(`/cards.json?auth=${this.state.auth.token}`);
-      const fetchedOrders = [];
-      for (let key in resp.data) {
-        fetchedOrders.push({
-          id: key,
-          ...resp.data[key]
-        });
-        this.setState({ cards: fetchedOrders });
-      }
-    }
-  }
+  };
 
   render() {
     return (

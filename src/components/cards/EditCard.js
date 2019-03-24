@@ -52,7 +52,8 @@ export default class EditCard extends Component {
     const updCard = {
       imgUrl,
       heading,
-      text
+      text,
+      userId: auth.localId
     };
 
     const resp = await axios.put(
