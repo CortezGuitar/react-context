@@ -16,7 +16,10 @@ class Header extends Component {
     return (
       <nav className="navbar navbar-expand-md bg-success navbar-dark shadow-sm">
         <div className="container p-1">
-          <a href="http://localhost:3000" className="navbar-brand">
+          <a
+            href="http://context-react-bootstrap.firebaseapp.com"
+            className="navbar-brand"
+          >
             <h2>
               <span className="text-warning">
                 <i className="fab fa-react" />
