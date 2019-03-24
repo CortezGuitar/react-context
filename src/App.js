@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  HashRouter as Router,
+  BrowserRouter as Router,
   Route,
   Switch,
   Redirect
@@ -43,7 +43,7 @@ export default class App extends Component {
       }
     }
   }
-  
+
   render() {
     const overlay = {
       position: 'relative',

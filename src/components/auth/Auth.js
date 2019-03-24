@@ -53,7 +53,7 @@ export default class Auth extends Component {
 
     this.setState({ errors: {} });
 
-    window.location.replace('http://localhost:3000');
+    window.location.replace('http://context-react-bootstrap.firebaseapp.com');
   };
 
   onSwitchHandler = () => {
