@@ -17,7 +17,7 @@ class Header extends Component {
       <nav className="navbar navbar-expand-md bg-success navbar-dark shadow-sm">
         <div className="container p-1">
           <a
-            href="http://context-react-bootstrap.firebaseapp.com"
+            href="https://context-react-bootstrap.firebaseapp.com"
             className="navbar-brand"
           >
             <h2>

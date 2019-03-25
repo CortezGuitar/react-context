@@ -39,21 +39,40 @@ export default class Auth extends Component {
       url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyBmtETju1J-7BEmrbZ5yAPrRiA-jEGiNcI`;
     }
 
-    const resp = await axios.post(url, newUser);
-    const expDate = new Date(new Date().getTime() + resp.data.expiresIn * 1000);
+    let resp = null;
+    let expDate = null;
+    try {
+      resp = await axios.post(url, newUser);
+      expDate = new Date(new Date().getTime() + resp.data.expiresIn * 1000);
+      localStorage.setItem('token', resp.data.idToken);
+      localStorage.setItem('expDate', expDate);
+      localStorage.setItem('userId', resp.data.localId);
+      dispatch({
+        type: 'AUTH_LOGIN',
+        payload: { token: resp.data.idToken, localId: resp.data.localId }
+      });
+    } catch (error) {
+      if (error.message === 'Request failed with status code 400') {
+        this.setState({
+          errors: { response: 'User already exist, switch to Sign in' }
+        });
+      }
 
-    localStorage.setItem('token', resp.data.idToken);
-    localStorage.setItem('expDate', expDate);
-    localStorage.setItem('userId', resp.data.localId);
+      if (
+        !isSignUp &&
+        error.message === 'Request failed with status code 400'
+      ) {
+        this.setState({
+          errors: { response: 'Invalid Email/Password' }
+        });
+      }
+    }
 
-    dispatch({
-      type: 'AUTH_LOGIN',
-      payload: { token: resp.data.idToken, localId: resp.data.localId }
-    });
+    // const resp = await axios.post(url, newUser);
 
-    this.setState({ errors: {} });
-
-    window.location.replace('http://context-react-bootstrap.firebaseapp.com');
+    if (resp) {
+      window.location.href = 'https://context-react-bootstrap.firebaseapp.com';
+    }
   };
 
   onSwitchHandler = () => {
@@ -114,6 +133,9 @@ export default class Auth extends Component {
                         onChange={this.onChange}
                       />
                       <div className="invalid-feedback">{errors.password}</div>
+                      <div className="text-danger lead">
+                        {errors.response ? errors.response : null}
+                      </div>
                     </div>
                     <input
                       type="submit"
